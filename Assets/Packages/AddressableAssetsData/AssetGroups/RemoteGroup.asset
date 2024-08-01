@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: RemoteGroup
+  m_EditorClassIdentifier: 
+  m_GroupName: RemoteGroup
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 8df40de5301176b4a94757053ffb20b9
+  m_SerializeEntries:
+  - m_GUID: 61b6662598ffd3643a111786ad35af1d
+    m_Address: GoblinClickerScene
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0b30a5c2f9ce73c499443da95e8e2d09
+    m_Address: WalkerScene
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 657b59c47a49cf8418e730f0ce626c5b, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: de2de1acc3fcb9e4c84c3021694060ab, type: 2}
+    - {fileID: 11400000, guid: 321b919cdac21054fb9cd8b3a7a8ccfe, type: 2}

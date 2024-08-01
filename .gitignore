@@ -72,3 +72,4 @@ crashlytics-build.properties
 # Packages documentation
 /[Aa]ssets/[Pp]ackages/*/[Dd]ocumentation.meta
 /[Aa]ssets/[Pp]ackages/*/[Dd]ocumentation/*
+/Debug
