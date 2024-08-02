@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 849631656c842274c96647bdd81b6c3c
   m_currentHash:
     serializedVersion: 2
-    Hash: 1783d1996422e52dec13afc93e420a5b
+    Hash: 6ce1b9838d4a0edf4ba8bae74e226e03
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
       - m_Id: ed37d6097f0386d4d9c784c257042819
         m_Value: ServerData/[BuildTarget]
       - m_Id: 0095544c6dc812e45973c4de4eb264da
-        m_Value: http://127.0.0.1:80/UnityBundles/GameLauncher/[BuildTarget]
+        m_Value: https://104.249.40.128:443/UnityBundles/GameLauncher/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: b53129de400a38544903e5af8c91a3d3
       m_Name: BuildTarget
@@ -93,8 +93,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d46da193637efa84d8c0fc181fe16df6, type: 2}
   m_InitializationObjects: []
   m_CertificateHandlerType:
-    m_AssemblyName: 
-    m_ClassName: 
+    m_AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_ClassName: Assets.Common.Scripts.Utils.CustomCertificateHandler
   m_ActivePlayerDataBuilderIndex: 3
   m_DataBuilders:
   - {fileID: 11400000, guid: e301d8ec7769878449ae59d3da9d72c4, type: 2}
