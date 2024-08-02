@@ -68,6 +68,7 @@
     <Compile Include="Assets\Common\Scripts\IGameDataProvider.cs" />
     <Compile Include="Assets\Scenes\GoblinClickerScene\GameManager.cs" />
     <Compile Include="Assets\Scenes\WalkerScene\Movement.cs" />
+    <Compile Include="Assets\Scenes\LauncherScene\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scenes\WalkerScene\GameManager.cs" />
     <Compile Include="Assets\Common\Scripts\AddressablesContentProvider.cs" />
     <Compile Include="Assets\Common\Scripts\AppContext.cs" />
@@ -92,6 +93,7 @@
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\Packages\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
+    <None Include="Assets\Packages\AddressableAssetsData\link.xml" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Packages\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
