@@ -21,7 +21,10 @@ namespace Assets.Common.Scripts
             while (!handle.IsDone)
             {
                 yield return null;
-                ProgressChanged?.Invoke(contentId, handle.PercentComplete);
+                if (handle.PercentComplete > 0)
+                {
+                    ProgressChanged?.Invoke(contentId, handle.PercentComplete);
+                }
             }
             OperationResult operationResult = new();
             if (handle.Status != AsyncOperationStatus.Succeeded)
@@ -45,7 +48,10 @@ namespace Assets.Common.Scripts
             while (!handle.IsDone)
             {
                 yield return null;
-                ProgressChanged?.Invoke(contentId, handle.PercentComplete);
+                if (handle.PercentComplete > 0)
+                {
+                    ProgressChanged?.Invoke(contentId, handle.PercentComplete);
+                }
             }
             ProgressChanged?.Invoke(contentId, handle.PercentComplete);
             sw.Stop();
@@ -61,7 +67,10 @@ namespace Assets.Common.Scripts
             while (!handle.IsDone)
             {
                 yield return null;
-                ProgressChanged?.Invoke(contentId, 1 - handle.PercentComplete);
+                if (handle.PercentComplete > 0)
+                {
+                    ProgressChanged?.Invoke(contentId, 1 - handle.PercentComplete);
+                }
             }
             OperationResult operationResult = new();
             if (handle.Status != AsyncOperationStatus.Succeeded)
