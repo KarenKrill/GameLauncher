@@ -1,19 +1,16 @@
-using Assets.Scenes.GoblinClickerScene;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using TMPro;
-using Unity.Services.Authentication;
-using Unity.Services.CloudSave;
-using Unity.Services.Core;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UI;
+using System.Linq;
 
-namespace GoblinClicker
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using Unity.Services.CloudSave;
+
+using TMPro;
+
+namespace Assets.Scenes.GoblinClickerScene
 {
     public class GameManager : MonoBehaviour
     {

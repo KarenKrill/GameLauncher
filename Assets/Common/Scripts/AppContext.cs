@@ -1,11 +1,9 @@
-﻿using Assets.Common.Scripts.Utils;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+
+using UnityEngine;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
-using UnityEngine;
-using UnityEngine.Networking;
-using UnityEngine.ResourceManagement.Util;
 
 namespace Assets.Common.Scripts
 {

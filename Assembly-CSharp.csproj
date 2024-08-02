@@ -59,25 +59,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scenes\GoblinClickerScene\PlayerController.cs" />
-    <Compile Include="Assets\Scenes\WalkerScene\PlayerController.cs" />
     <Compile Include="Assets\Scenes\LauncherScene\Scripts\GameLoadEntry.cs" />
     <Compile Include="Assets\Scenes\LauncherScene\Scripts\LauncherStartup.cs" />
-    <Compile Include="Assets\Scenes\WalkerScene\EnemySpawner.cs" />
+    <Compile Include="Assets\Scenes\DoozyCatcherScene\PlayerController.cs" />
+    <Compile Include="Assets\Scenes\DoozyCatcherScene\BoredBehaviour.cs" />
     <Compile Include="Assets\Common\Scripts\Configs\GameInfo.cs" />
     <Compile Include="Assets\Common\Scripts\IContentProvider.cs" />
     <Compile Include="Assets\Common\Scripts\IGameDataProvider.cs" />
+    <Compile Include="Assets\Scenes\DoozyCatcherScene\Movement.cs" />
     <Compile Include="Assets\Scenes\GoblinClickerScene\GameManager.cs" />
-    <Compile Include="Assets\Scenes\WalkerScene\Movement.cs" />
     <Compile Include="Assets\Scenes\LauncherScene\Scripts\MenuController.cs" />
-    <Compile Include="Assets\Scenes\WalkerScene\GameManager.cs" />
     <Compile Include="Assets\Common\Scripts\AddressablesContentProvider.cs" />
     <Compile Include="Assets\Common\Scripts\AppContext.cs" />
     <Compile Include="Assets\Common\Scripts\Configs\GameDatabase.cs" />
     <Compile Include="Assets\Common\Scripts\Utils\Convert\HumanReadableFormats.cs" />
     <Compile Include="Assets\Common\Scripts\Utils\CustomCertificateHandler.cs" />
-    <Compile Include="Assets\Scenes\WalkerScene\BoredBehaviour.cs" />
+    <Compile Include="Assets\Scenes\DoozyCatcherScene\EnemySpawner.cs" />
     <Compile Include="Assets\Scenes\LauncherScene\Scripts\GamesViewer.cs" />
     <Compile Include="Assets\Scenes\GoblinClickerScene\EnemyController.cs" />
+    <Compile Include="Assets\Scenes\DoozyCatcherScene\GameManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -93,7 +93,6 @@
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />
     <None Include="Assets\Packages\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\Packages\AddressableAssetsData\link.xml" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\Packages\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />

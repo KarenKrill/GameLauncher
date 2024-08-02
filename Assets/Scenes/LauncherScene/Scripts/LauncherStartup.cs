@@ -1,15 +1,19 @@
-using Assets.Common.Scripts;
 using UnityEngine;
 
-public class LauncherStartup : MonoBehaviour
+using Assets.Common.Scripts;
+
+namespace Assets.Scenes.LauncherScene
 {
-    [SerializeField]
-    GamesViewer _gamesViewer;
-    [SerializeField]
-    AppContext _appContext;
-    private async void Awake()
+    public class LauncherStartup : MonoBehaviour
     {
-        await _appContext.Init();
-        _gamesViewer.Init(_appContext.ContentProvider);
+        [SerializeField]
+        GamesViewer _gamesViewer;
+        [SerializeField]
+        AppContext _appContext;
+        private async void Awake()
+        {
+            await _appContext.Init();
+            _gamesViewer.Init(_appContext.ContentProvider);
+        }
     }
 }

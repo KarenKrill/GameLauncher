@@ -1,293 +1,296 @@
-using TMPro;
+using System.Collections;
+using System.Threading.Tasks;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using System.Collections;
-using System.Threading.Tasks;
-using UnityEngine.SceneManagement;
 
+using TMPro;
+
+using Assets.Common.Scripts;
 using Assets.Common.Scripts.Configs;
 using Assets.Common.Scripts.Utils.Convert;
-using Assets.Common.Scripts;
-using System;
 
-public class GameLoadEntry : MonoBehaviour
+namespace Assets.Scenes.LauncherScene
 {
-    static bool _downloadLock = false;
-    [SerializeField]
-    private TextMeshProUGUI _nameText;
-    [SerializeField]
-    private Image _iconImage;
-    [SerializeField]
-    private Button _playButton;
-    [SerializeField]
-    private Button _loadButton;
-    [SerializeField]
-    private Button _unloadButton;
-    [SerializeField]
-    private Slider _loadSlider;
-    [SerializeField]
-    private GameObject _loadSliderFiller;
-    [SerializeField]
-    private TextMeshProUGUI _loadedSizeText;
-    [SerializeField]
-    private TextMeshProUGUI _totalSizeText;
-
-    IContentProvider _contentLoader = null;
-    GameInfo _gameInfo;
-    float _loadProgress;
-    float _targetLoadProgress;
-    float? _startLoadProgress = null;
-    long _totalBytes = 0;
-    bool _isCached = false;
-    /// <summary>
-    /// Range: [0,1]
-    /// </summary>
-    float _LoadProgress
+    public class GameLoadEntry : MonoBehaviour
     {
-        get => _loadProgress;
-        set
+        static bool _downloadLock = false;
+        [SerializeField]
+        private TextMeshProUGUI _nameText;
+        [SerializeField]
+        private Image _iconImage;
+        [SerializeField]
+        private Button _playButton;
+        [SerializeField]
+        private Button _loadButton;
+        [SerializeField]
+        private Button _unloadButton;
+        [SerializeField]
+        private Slider _loadSlider;
+        [SerializeField]
+        private GameObject _loadSliderFiller;
+        [SerializeField]
+        private TextMeshProUGUI _loadedSizeText;
+        [SerializeField]
+        private TextMeshProUGUI _totalSizeText;
+
+        IContentProvider _contentLoader = null;
+        GameInfo _gameInfo;
+        float _loadProgress;
+        float _targetLoadProgress;
+        float? _startLoadProgress = null;
+        long _totalBytes = 0;
+        bool _isCached = false;
+        /// <summary>
+        /// Range: [0,1]
+        /// </summary>
+        float _LoadProgress
         {
-            if (_loadProgress != value)
+            get => _loadProgress;
+            set
             {
-                value = Mathf.Clamp01(value);
                 if (_loadProgress != value)
                 {
-                    if (_loadSlider != null)
+                    value = Mathf.Clamp01(value);
+                    if (_loadProgress != value)
                     {
-                        _loadSlider.value = Mathf.Lerp(_loadSlider.minValue, _loadSlider.maxValue, value);
+                        if (_loadSlider != null)
+                        {
+                            _loadSlider.value = Mathf.Lerp(_loadSlider.minValue, _loadSlider.maxValue, value);
+                        }
+                        if (_loadSliderFiller != null)
+                        {
+                            _loadSliderFiller.SetActive(value != 0);
+                        }
+                        if (_loadedSizeText != null)
+                        {
+                            _loadedSizeText.text = HumanReadableFormats.FormatBytes((long)(_totalBytes * value));
+                        }
+                        _loadProgress = value;
                     }
-                    if (_loadSliderFiller != null)
+                }
+            }
+        }
+        long _TotalBytes
+        {
+            get => _totalBytes;
+            set
+            {
+                if (_totalBytes != value)
+                {
+                    _totalBytes = value;
+                    if (_totalSizeText != null)
                     {
-                        _loadSliderFiller.SetActive(value != 0);
+                        _totalSizeText.text = HumanReadableFormats.FormatBytes(value);
                     }
                     if (_loadedSizeText != null)
                     {
-                        _loadedSizeText.text = HumanReadableFormats.FormatBytes((long)(_totalBytes * value));
+                        _loadedSizeText.text = HumanReadableFormats.FormatBytes(0);
                     }
-                    _loadProgress = value;
                 }
             }
         }
-    }
-    long _TotalBytes
-    {
-        get => _totalBytes;
-        set
+        bool _IsCached
         {
-            if (_totalBytes != value)
+            get => _isCached;
+            set
             {
-                _totalBytes = value;
+                _isCached = value;
+                if (_playButton != null)
+                {
+                    _playButton.interactable = _isCached;
+                }
+                if (_loadButton != null)
+                {
+                    _loadButton.interactable = !_isCached;
+                }
+                if (_unloadButton != null)
+                {
+                    _unloadButton.interactable = _isCached;
+                }
                 if (_totalSizeText != null)
                 {
-                    _totalSizeText.text = HumanReadableFormats.FormatBytes(value);
-                }
-                if (_loadedSizeText != null)
-                {
-                    _loadedSizeText.text = HumanReadableFormats.FormatBytes(0);
+                    var parent = _totalSizeText.transform.parent.gameObject;
+                    if (parent != null)
+                    {
+                        parent.SetActive(!_isCached);
+                    }
                 }
             }
         }
-    }
-    bool _IsCached
-    {
-        get => _isCached;
-        set
+        async Task UpdateCacheInfoTask()
         {
-            _isCached = value;
-            if (_playButton != null)
+            bool isCached = await _contentLoader.IsCachedAsync(_gameInfo.ContentId);
+            if (isCached)
             {
-                _playButton.interactable = _isCached;
+                _LoadProgress = 1;
             }
+            else
+            {
+                _TotalBytes = await _contentLoader.GetDownloadSizeAsync(_gameInfo.ContentId);
+            }
+            _IsCached = isCached;
+        }
+        public void Init(IContentProvider gameContentLoader, GameInfo gameInfo)
+        {
+            _contentLoader = gameContentLoader;
+            _gameInfo = gameInfo;
+            if (_nameText != null)
+            {
+                _nameText.text = _gameInfo.Name;
+            }
+            if (_iconImage != null)
+            {
+                _iconImage.sprite = _gameInfo.Icon;
+            }
+            _ = UpdateCacheInfoTask();
+            if (enabled)
+            {
+                UnsubscribeFromEvents();
+                SubscribeOnEvents();
+            }
+        }
+        #region Button event handlers
+        private void OnLoadButtonClick()
+        {
+            _downloadLock = true;
+            _loadButton.interactable = false;
+            _targetLoadProgress = 1;
+            _startLoadProgress = null;
+            var coroutine = StartCoroutine(_contentLoader.DownloadContentCoroutine(_gameInfo.ContentId));
+        }
+        private void OnUnloadButtonClick()
+        {
+            if (!_downloadLock)
+            {
+                _unloadButton.interactable = false;
+                _targetLoadProgress = 0;
+                _startLoadProgress = null;
+                var coroutine = StartCoroutine(_contentLoader.UnloadContentCoroutine(_gameInfo.ContentId));
+            }
+        }
+        private void OnPlayButtonClick()
+        {
+            if (!_downloadLock)
+            {
+                _playButton.interactable = false;
+                _targetLoadProgress = 1;
+                _startLoadProgress = null;
+                var coroutine = StartCoroutine(_contentLoader.LoadSceneCoroutine(_gameInfo.ContentId));
+            }
+        }
+        #endregion
+        #region ContentLoader event handlers
+        private void OnContentOperationProgressChanged(string contentId, float progress)
+        {
+            if (contentId == _gameInfo.ContentId)
+            {
+                _startLoadProgress ??= progress;
+                progress = Mathf.InverseLerp(_startLoadProgress.Value, _targetLoadProgress, progress);
+                _LoadProgress = progress;
+            }
+        }
+        private void OnContentDownloadCompleted(string contentId, OperationResult result)
+        {
+            if (contentId == _gameInfo.ContentId)
+            {
+                if (!result.Succeeded)
+                {
+                    _loadButton.interactable = true;
+                    _IsCached = false;
+                    _LoadProgress = 0;
+                    Debug.LogError($"Loading \"{contentId}\" failed with {result.Exception.GetType()}: {result.Exception}");
+                }
+                else
+                {
+                    _IsCached = true;
+                }
+            }
+            _downloadLock = false;
+        }
+        static IEnumerator ActivateSceneCoroutine(SceneInstance sceneInstance)
+        {
+            var asyncOperation = sceneInstance.ActivateAsync();
+            yield return asyncOperation;
+        }
+        private void OnLoadSceneCompleted(string contentId, OperationResult<SceneInstance> result)
+        {
+            if (contentId == _gameInfo.ContentId)
+            {
+                if (result.Succeeded)
+                {
+                    var coroutine = StartCoroutine(ActivateSceneCoroutine(result.Result));
+                }
+                else
+                {
+                    _loadButton.interactable = true;
+                    Debug.LogError("Scene can't be loaded!");
+                }
+            }
+        }
+        private async void OnContentUnloadCompleted(string contentId, OperationResult result)
+        {
+            if (contentId == _gameInfo.ContentId)
+            {
+                if (!result.Succeeded)
+                {
+                    _unloadButton.interactable = true;
+                    Debug.LogError($"Unloading \"{contentId}\" failed with {result.Exception.GetType()}: {result.Exception}");
+                }
+                else
+                {
+                    _IsCached = false;
+                    _TotalBytes = await _contentLoader.GetDownloadSizeAsync(contentId);
+                }
+            }
+        }
+        #endregion
+        private void SubscribeOnEvents()
+        {
             if (_loadButton != null)
             {
-                _loadButton.interactable = !_isCached;
+                _loadButton.onClick.AddListener(OnLoadButtonClick);
             }
             if (_unloadButton != null)
             {
-                _unloadButton.interactable = _isCached;
+                _unloadButton.onClick.AddListener(OnUnloadButtonClick);
             }
-            if (_totalSizeText != null)
+            if (_playButton != null)
             {
-                var parent = _totalSizeText.transform.parent.gameObject;
-                if (parent != null)
-                {
-                    parent.SetActive(!_isCached);
-                }
+                _playButton.onClick.AddListener(OnPlayButtonClick);
             }
-        }
-    }
-    async Task UpdateCacheInfoTask()
-    {
-        bool isCached = await _contentLoader.IsCachedAsync(_gameInfo.ContentId);
-        if (isCached)
-        {
-            _LoadProgress = 1;
-        }
-        else
-        {
-            _TotalBytes = await _contentLoader.GetDownloadSizeAsync(_gameInfo.ContentId);
-        }
-        _IsCached = isCached;
-    }
-    public void Init(IContentProvider gameContentLoader, GameInfo gameInfo)
-    {
-        _contentLoader = gameContentLoader;
-        _gameInfo = gameInfo;
-        if (_nameText != null)
-        {
-            _nameText.text = _gameInfo.Name;   
-        }
-        if (_iconImage != null)
-        {
-            _iconImage.sprite = _gameInfo.Icon;
-        }
-        _ = UpdateCacheInfoTask();
-        if (enabled)
-        {
-            UnsubscribeFromEvents();
-            SubscribeOnEvents();
-        }
-    }
-    #region Button event handlers
-    private void OnLoadButtonClick()
-    {
-        _downloadLock = true;
-        _loadButton.interactable = false;
-        _targetLoadProgress = 1;
-        _startLoadProgress = null;
-        var coroutine = StartCoroutine(_contentLoader.DownloadContentCoroutine(_gameInfo.ContentId));
-    }
-    private void OnUnloadButtonClick()
-    {
-        if (!_downloadLock)
-        {
-            _unloadButton.interactable = false;
-            _targetLoadProgress = 0;
-            _startLoadProgress = null;
-            var coroutine = StartCoroutine(_contentLoader.UnloadContentCoroutine(_gameInfo.ContentId));
-        }
-    }
-    private void OnPlayButtonClick()
-    {
-        if (!_downloadLock)
-        {
-            _playButton.interactable = false;
-            _targetLoadProgress = 1;
-            _startLoadProgress = null;
-            var coroutine = StartCoroutine(_contentLoader.LoadSceneCoroutine(_gameInfo.ContentId));
-        }
-    }
-    #endregion
-    #region ContentLoader event handlers
-    private void OnContentOperationProgressChanged(string contentId, float progress)
-    {
-        if (contentId == _gameInfo.ContentId)
-        {
-            _startLoadProgress ??= progress;
-            progress = Mathf.InverseLerp(_startLoadProgress.Value, _targetLoadProgress, progress);
-            _LoadProgress = progress;
-        }
-    }
-    private void OnContentDownloadCompleted(string contentId, OperationResult result)
-    {
-        if (contentId == _gameInfo.ContentId)
-        {
-            if (!result.Succeeded)
+            if (_contentLoader != null)
             {
-                _loadButton.interactable = true;
-                _IsCached = false;
-                _LoadProgress = 0;
-                Debug.LogError($"Loading \"{contentId}\" failed with {result.Exception.GetType()}: {result.Exception}");
+                _contentLoader.ProgressChanged += OnContentOperationProgressChanged;
+                _contentLoader.DownloadCompleted += OnContentDownloadCompleted; ;
+                _contentLoader.LoadSceneCompleted += OnLoadSceneCompleted; ;
+                _contentLoader.UnloadCompleted += OnContentUnloadCompleted;
             }
-            else
+        }
+        private void UnsubscribeFromEvents()
+        {
+            if (_loadButton != null)
             {
-                _IsCached = true;
+                _loadButton.onClick.RemoveListener(OnLoadButtonClick);
             }
-        }
-        _downloadLock = false;
-    }
-    static IEnumerator ActivateSceneCoroutine(SceneInstance sceneInstance)
-    {
-        var asyncOperation = sceneInstance.ActivateAsync();
-        yield return asyncOperation;
-    }
-    private void OnLoadSceneCompleted(string contentId, OperationResult<SceneInstance> result)
-    {
-        if (contentId == _gameInfo.ContentId)
-        {
-            if (result.Succeeded)
+            if (_unloadButton != null)
             {
-                var coroutine = StartCoroutine(ActivateSceneCoroutine(result.Result));
+                _unloadButton.onClick.RemoveListener(OnUnloadButtonClick);
             }
-            else
+            if (_playButton != null)
             {
-                _loadButton.interactable = true;
-                Debug.LogError("Scene can't be loaded!");
+                _playButton.onClick.RemoveListener(OnPlayButtonClick);
             }
-        }
-    }
-    private async void OnContentUnloadCompleted(string contentId, OperationResult result)
-    {
-        if (contentId == _gameInfo.ContentId)
-        {
-            if (!result.Succeeded)
+            if (_contentLoader != null)
             {
-                _unloadButton.interactable = true;
-                Debug.LogError($"Unloading \"{contentId}\" failed with {result.Exception.GetType()}: {result.Exception}");
-            }
-            else
-            {
-                _IsCached = false;
-                _TotalBytes = await _contentLoader.GetDownloadSizeAsync(contentId);
+                _contentLoader.ProgressChanged -= OnContentOperationProgressChanged;
+                _contentLoader.DownloadCompleted -= OnContentDownloadCompleted; ;
+                _contentLoader.LoadSceneCompleted -= OnLoadSceneCompleted; ;
+                _contentLoader.UnloadCompleted -= OnContentUnloadCompleted;
             }
         }
+        private void OnEnable() => SubscribeOnEvents();
+        private void OnDisable() => UnsubscribeFromEvents();
     }
-    #endregion
-    private void SubscribeOnEvents()
-    {
-        if (_loadButton != null)
-        {
-            _loadButton.onClick.AddListener(OnLoadButtonClick);
-        }
-        if (_unloadButton != null)
-        {
-            _unloadButton.onClick.AddListener(OnUnloadButtonClick);
-        }
-        if (_playButton != null)
-        {
-            _playButton.onClick.AddListener(OnPlayButtonClick);
-        }
-        if (_contentLoader != null)
-        {
-            _contentLoader.ProgressChanged += OnContentOperationProgressChanged;
-            _contentLoader.DownloadCompleted += OnContentDownloadCompleted; ;
-            _contentLoader.LoadSceneCompleted += OnLoadSceneCompleted; ;
-            _contentLoader.UnloadCompleted += OnContentUnloadCompleted;
-        }
-    }
-    private void UnsubscribeFromEvents()
-    {
-        if (_loadButton != null)
-        {
-            _loadButton.onClick.RemoveListener(OnLoadButtonClick);
-        }
-        if (_unloadButton != null)
-        {
-            _unloadButton.onClick.RemoveListener(OnUnloadButtonClick);
-        }
-        if (_playButton != null)
-        {
-            _playButton.onClick.RemoveListener(OnPlayButtonClick);
-        }
-        if (_contentLoader != null)
-        {
-            _contentLoader.ProgressChanged -= OnContentOperationProgressChanged;
-            _contentLoader.DownloadCompleted -= OnContentDownloadCompleted; ;
-            _contentLoader.LoadSceneCompleted -= OnLoadSceneCompleted; ;
-            _contentLoader.UnloadCompleted -= OnContentUnloadCompleted;
-        }
-    }
-    private void OnEnable() => SubscribeOnEvents();
-    private void OnDisable() => UnsubscribeFromEvents();
 }

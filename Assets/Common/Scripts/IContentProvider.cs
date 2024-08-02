@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Threading.Tasks;
-using UnityEngine.ResourceManagement.ResourceProviders;
+
 using UnityEngine.SceneManagement;
+using UnityEngine.ResourceManagement.ResourceProviders;
+
 
 namespace Assets.Common.Scripts
 {

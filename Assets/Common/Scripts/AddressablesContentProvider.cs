@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Threading.Tasks;
+
 using UnityEngine;
-using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
-using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
 
 namespace Assets.Common.Scripts
 {

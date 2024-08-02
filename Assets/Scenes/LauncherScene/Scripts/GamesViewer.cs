@@ -1,32 +1,33 @@
-using System.Collections.Generic;
-
 using UnityEngine;
 
-using Assets.Common.Scripts.Configs;
 using Assets.Common.Scripts;
+using Assets.Common.Scripts.Configs;
 
-public class GamesViewer : MonoBehaviour
+namespace Assets.Scenes.LauncherScene
 {
-    [SerializeField]
-    GameObject _gameLoadEntryPrefab;
-    [SerializeField]
-    Transform _gameLoadEntriesContainerTransform;
-    [SerializeField]
-    GameDatabase _gameDatabase;
-    IContentProvider _gameContentLoader;
-    public void Init(IContentProvider gameContentLoader)
+    public class GamesViewer : MonoBehaviour
     {
-        _gameContentLoader = gameContentLoader;
-        foreach (var gameInfo in _gameDatabase.GamesList)
+        [SerializeField]
+        GameObject _gameLoadEntryPrefab;
+        [SerializeField]
+        Transform _gameLoadEntriesContainerTransform;
+        [SerializeField]
+        GameDatabase _gameDatabase;
+        IContentProvider _gameContentLoader;
+        public void Init(IContentProvider gameContentLoader)
         {
-            if (gameInfo != null)
+            _gameContentLoader = gameContentLoader;
+            foreach (var gameInfo in _gameDatabase.GamesList)
             {
-                var gameLoadEntryObject = Instantiate(_gameLoadEntryPrefab, _gameLoadEntriesContainerTransform);
-                if (gameLoadEntryObject.TryGetComponent<GameLoadEntry>(out var gameLoadEntry))
+                if (gameInfo != null)
                 {
-                    gameLoadEntry.Init(_gameContentLoader, gameInfo);
+                    var gameLoadEntryObject = Instantiate(_gameLoadEntryPrefab, _gameLoadEntriesContainerTransform);
+                    if (gameLoadEntryObject.TryGetComponent<GameLoadEntry>(out var gameLoadEntry))
+                    {
+                        gameLoadEntry.Init(_gameContentLoader, gameInfo);
+                    }
+                    else Destroy(gameLoadEntryObject);
                 }
-                else Destroy(gameLoadEntryObject);
             }
         }
     }

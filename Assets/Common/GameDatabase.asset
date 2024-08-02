@@ -16,6 +16,6 @@ MonoBehaviour:
   - Name: GoblinClicker
     Icon: {fileID: 21300000, guid: b92c2f91ad4131e4ab01c4479742c2b1, type: 3}
     ContentId: GoblinClickerScene
-  - Name: Walker
-    Icon: {fileID: 0}
-    ContentId: WalkerScene
+  - Name: DoozyCatcher
+    Icon: {fileID: 21300000, guid: d3b122a280697544d92acafdb63596bd, type: 3}
+    ContentId: DoozyCatcherScene
