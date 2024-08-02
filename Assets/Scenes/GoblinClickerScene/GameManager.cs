@@ -51,10 +51,6 @@ namespace GoblinClicker
         private TextMeshProUGUI _scoreText;
         [SerializeField]
         private TextMeshProUGUI _recordScoreText;
-        [SerializeField]
-        private Button _loadButton;
-        [SerializeField]
-        private Button _saveButton;
 
         int _score = 0;
         int _Score
