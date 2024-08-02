@@ -9,9 +9,11 @@ using UnityEngine.SceneManagement;
 using Assets.Common.Scripts.Configs;
 using Assets.Common.Scripts.Utils.Convert;
 using Assets.Common.Scripts;
+using System;
 
 public class GameLoadEntry : MonoBehaviour
 {
+    static bool _downloadLock = false;
     [SerializeField]
     private TextMeshProUGUI _nameText;
     [SerializeField]
@@ -150,6 +152,7 @@ public class GameLoadEntry : MonoBehaviour
     #region Button event handlers
     private void OnLoadButtonClick()
     {
+        _downloadLock = true;
         _loadButton.interactable = false;
         _targetLoadProgress = 1;
         _startLoadProgress = null;
@@ -157,17 +160,23 @@ public class GameLoadEntry : MonoBehaviour
     }
     private void OnUnloadButtonClick()
     {
-        _unloadButton.interactable = false;
-        _targetLoadProgress = 0;
-        _startLoadProgress = null;
-        var coroutine = StartCoroutine(_contentLoader.UnloadContentCoroutine(_gameInfo.ContentId));
+        if (!_downloadLock)
+        {
+            _unloadButton.interactable = false;
+            _targetLoadProgress = 0;
+            _startLoadProgress = null;
+            var coroutine = StartCoroutine(_contentLoader.UnloadContentCoroutine(_gameInfo.ContentId));
+        }
     }
     private void OnPlayButtonClick()
     {
-        _playButton.interactable = false;
-        _targetLoadProgress = 1;
-        _startLoadProgress = null;
-        var coroutine = StartCoroutine(_contentLoader.LoadSceneCoroutine(_gameInfo.ContentId));
+        if (!_downloadLock)
+        {
+            _playButton.interactable = false;
+            _targetLoadProgress = 1;
+            _startLoadProgress = null;
+            var coroutine = StartCoroutine(_contentLoader.LoadSceneCoroutine(_gameInfo.ContentId));
+        }
     }
     #endregion
     #region ContentLoader event handlers
@@ -196,6 +205,7 @@ public class GameLoadEntry : MonoBehaviour
                 _IsCached = true;
             }
         }
+        _downloadLock = false;
     }
     static IEnumerator ActivateSceneCoroutine(SceneInstance sceneInstance)
     {
