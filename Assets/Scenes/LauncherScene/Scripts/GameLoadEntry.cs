@@ -10,12 +10,13 @@ using TMPro;
 using Assets.Common.Scripts;
 using Assets.Common.Scripts.Configs;
 using Assets.Common.Scripts.Utils.Convert;
+using System.Threading;
 
 namespace Assets.Scenes.LauncherScene
 {
     public class GameLoadEntry : MonoBehaviour
     {
-        static bool _downloadLock = false;
+        static int _downloadInProgressCount = 0;
         [SerializeField]
         private TextMeshProUGUI _nameText;
         [SerializeField]
@@ -154,7 +155,7 @@ namespace Assets.Scenes.LauncherScene
         #region Button event handlers
         private void OnLoadButtonClick()
         {
-            _downloadLock = true;
+            Interlocked.Increment(ref _downloadInProgressCount);
             _loadButton.interactable = false;
             _targetLoadProgress = 1;
             _startLoadProgress = null;
@@ -162,17 +163,14 @@ namespace Assets.Scenes.LauncherScene
         }
         private void OnUnloadButtonClick()
         {
-            if (!_downloadLock)
-            {
-                _unloadButton.interactable = false;
-                _targetLoadProgress = 0;
-                _startLoadProgress = null;
-                var coroutine = StartCoroutine(_contentLoader.UnloadContentCoroutine(_gameInfo.ContentId));
-            }
+            _unloadButton.interactable = false;
+            _targetLoadProgress = 0;
+            _startLoadProgress = null;
+            var coroutine = StartCoroutine(_contentLoader.UnloadContentCoroutine(_gameInfo.ContentId));
         }
         private void OnPlayButtonClick()
         {
-            if (!_downloadLock)
+            if (_downloadInProgressCount <= 0)
             {
                 _playButton.interactable = false;
                 _targetLoadProgress = 1;
@@ -188,6 +186,7 @@ namespace Assets.Scenes.LauncherScene
             {
                 _startLoadProgress ??= progress;
                 progress = Mathf.InverseLerp(_startLoadProgress.Value, _targetLoadProgress, progress);
+                Debug.Log($"LoadProgress: {progress}");
                 _LoadProgress = progress;
             }
         }
@@ -206,8 +205,8 @@ namespace Assets.Scenes.LauncherScene
                 {
                     _IsCached = true;
                 }
+                Interlocked.Decrement(ref _downloadInProgressCount);
             }
-            _downloadLock = false;
         }
         static IEnumerator ActivateSceneCoroutine(SceneInstance sceneInstance)
         {
