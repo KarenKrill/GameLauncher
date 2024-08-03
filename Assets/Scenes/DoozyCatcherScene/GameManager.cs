@@ -1,14 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Unity.Services.CloudSave;
 
 using TMPro;
+using Assets.Common.Scripts;
 
 namespace Assets.Scenes.DoozyCatcherScene
 {
@@ -46,6 +46,7 @@ namespace Assets.Scenes.DoozyCatcherScene
         private TextMeshProUGUI _timeText;
         [SerializeField]
         private TextMeshProUGUI _bestTimeText;
+        private Common.Scripts.AppContext _appContext;
         float _time = 0;
         float _Time
         {
@@ -81,12 +82,19 @@ namespace Assets.Scenes.DoozyCatcherScene
         }
         async Task LoadPlayerDataAsync()
         {
-            var keys = new HashSet<string>() { "BestTime" };
-            var data = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
-            if (data.TryGetValue(keys.First(), out var item))
+            if (_appContext != null && _appContext.DataProvider != null)
             {
-                _BestTime = item.Value.GetAs<float>();
-                _playerSaveDataDirtyFlag = false;
+                var metadata = new Dictionary<string, Type>() { { "BestTime", typeof(float) } };
+                var data = await _appContext.DataProvider.LoadAsync(metadata);
+                if (data != null && data.TryGetValue("BestTime", out var value))
+                {
+                    _BestTime = (float)value;
+                    _playerSaveDataDirtyFlag = false;
+                }
+            }
+            else
+            {
+                Debug.LogError($"{nameof(IDataProvider)} not found (save/load function not works)");
             }
         }
         async Task SavePlayerDataAsync()
@@ -95,13 +103,24 @@ namespace Assets.Scenes.DoozyCatcherScene
             {
                 { "BestTime", _BestTime }
             };
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            if (_appContext != null && _appContext.DataProvider != null)
+            {
+                await _appContext.DataProvider.SaveAsync(data);
+            }
+            else
+            {
+                Debug.LogError($"{nameof(IDataProvider)} not found (save/load function not works)");
+            }
         }
         [SerializeField]
         float _autoSavePeriodTimeMs = 500;
         float _lastAutoSaveEllapsedTimeMs = 0;
         bool _playerSaveDataDirtyFlag = false;
 
+        void Awake()
+        {
+            _appContext = FindFirstObjectByType<Common.Scripts.AppContext>();
+        }
         // Start is called before the first frame update
         async void Start()
         {

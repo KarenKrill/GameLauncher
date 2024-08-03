@@ -1,14 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Unity.Services.CloudSave;
 
 using TMPro;
+using Assets.Common.Scripts;
 
 namespace Assets.Scenes.GoblinClickerScene
 {
@@ -48,6 +48,7 @@ namespace Assets.Scenes.GoblinClickerScene
         private TextMeshProUGUI _scoreText;
         [SerializeField]
         private TextMeshProUGUI _recordScoreText;
+        private Common.Scripts.AppContext _appContext;
 
         int _score = 0;
         int _Score
@@ -88,12 +89,19 @@ namespace Assets.Scenes.GoblinClickerScene
         }
         async Task LoadPlayerDataAsync()
         {
-            var keys = new HashSet<string>() { "RecordScore" };
-            var data = await CloudSaveService.Instance.Data.Player.LoadAsync(keys);
-            if (data.TryGetValue(keys.First(), out var item))
+            if (_appContext != null && _appContext.DataProvider != null)
             {
-                _RecordScore = item.Value.GetAs<int>();
-                _playerSaveDataDirtyFlag = false;
+                var metadata = new Dictionary<string, Type>() { { "RecordScore", typeof(int) } };
+                var data = await _appContext.DataProvider.LoadAsync(metadata);
+                if (data != null && data.TryGetValue("RecordScore", out var value))
+                {
+                    _RecordScore = (int)value;
+                    _playerSaveDataDirtyFlag = false;
+                }
+            }
+            else
+            {
+                Debug.LogError($"{nameof(IDataProvider)} not found (save/load function not works)");
             }
         }
         async Task SavePlayerDataAsync()
@@ -102,13 +110,24 @@ namespace Assets.Scenes.GoblinClickerScene
             {
                 { "RecordScore", _RecordScore }
             };
-            await CloudSaveService.Instance.Data.Player.SaveAsync(data);
+            if (_appContext != null && _appContext.DataProvider != null)
+            {
+                await _appContext.DataProvider.SaveAsync(data);
+            }
+            else
+            {
+                Debug.LogError($"{nameof(IDataProvider)} not found (save/load function not works)");
+            }
         }
         [SerializeField]
         float _autoSavePeriodTimeMs = 500;
         float _lastAutoSaveEllapsedTimeMs = 0;
         bool _playerSaveDataDirtyFlag = false;
 
+        void Awake()
+        {
+            _appContext = FindFirstObjectByType<Common.Scripts.AppContext>();
+        }
         // Start is called before the first frame update
         async void Start()
         {

@@ -11,28 +11,24 @@ namespace Assets.Common.Scripts
     {
         private static bool _isInited = false;
         private static AppContext _instance = null;
-        private async Task InitUnityCloudDataProvider()
-        {
-            try
-            {
-                await UnityServices.InitializeAsync();
-                await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-        }
         public async Task Init()
         {
             if (_isInited)
             {
                 ContentProvider = _instance.ContentProvider;
+                DataProvider = _instance.DataProvider;
             }
             else
             {
                 ContentProvider = new AddressablesContentProvider();
-                await InitUnityCloudDataProvider();
+                DataProvider = new CloudSaveDataProvider();
+                if (DataProvider is IRemoteDataProvider remoteDataProvider)
+                {
+                    if (remoteDataProvider.IsSignInNeeded)
+                    {
+                        await remoteDataProvider.SignInAnonymouslyAsync();
+                    }
+                }
                 _isInited = true;
             }
         }
@@ -50,5 +46,7 @@ namespace Assets.Common.Scripts
         }
         [NonSerialized]
         public IContentProvider ContentProvider;
+        [NonSerialized]
+        public IDataProvider DataProvider;
     }
 }
