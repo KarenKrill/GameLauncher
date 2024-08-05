@@ -66,7 +66,6 @@
     <Compile Include="Assets\Common\Scripts\CloudSaveDataProvider.cs" />
     <Compile Include="Assets\Common\Scripts\IRemoteDataProvider.cs" />
     <Compile Include="Assets\Common\Scripts\IContentProvider.cs" />
-    <Compile Include="Assets\Scenes\LauncherScene\Scripts\LauncherSceneInstaller.cs" />
     <Compile Include="Assets\Scenes\DoozyCatcherScene\Movement.cs" />
     <Compile Include="Assets\Scenes\GoblinClickerScene\GameManager.cs" />
     <Compile Include="Assets\Common\Scripts\AppInstaller.cs" />
@@ -96,7 +95,6 @@
     <None Include="Assets\Packages\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
-    <None Include="Assets\Packages\AddressableAssetsData\link.xml" />
     <None Include="Assets\Packages\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\Packages\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
@@ -790,14 +788,14 @@
     <Reference Include="Unity.Rider.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.Rider.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.VisualScripting.Flow">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Flow.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
