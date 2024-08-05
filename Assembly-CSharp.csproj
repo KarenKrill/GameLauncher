@@ -66,6 +66,7 @@
     <Compile Include="Assets\Common\Scripts\CloudSaveDataProvider.cs" />
     <Compile Include="Assets\Common\Scripts\IRemoteDataProvider.cs" />
     <Compile Include="Assets\Common\Scripts\IContentProvider.cs" />
+    <Compile Include="Assets\Common\Scripts\RandomMover.cs" />
     <Compile Include="Assets\Scenes\DoozyCatcherScene\Movement.cs" />
     <Compile Include="Assets\Scenes\GoblinClickerScene\GameManager.cs" />
     <Compile Include="Assets\Common\Scripts\AppInstaller.cs" />
@@ -77,7 +78,6 @@
     <Compile Include="Assets\Common\Scripts\Utils\CustomCertificateHandler.cs" />
     <Compile Include="Assets\Scenes\DoozyCatcherScene\EnemySpawner.cs" />
     <Compile Include="Assets\Scenes\LauncherScene\Scripts\GamesViewer.cs" />
-    <Compile Include="Assets\Scenes\GoblinClickerScene\EnemyController.cs" />
     <Compile Include="Assets\Scenes\DoozyCatcherScene\GameManager.cs" />
   </ItemGroup>
   <ItemGroup>

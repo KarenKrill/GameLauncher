@@ -53,8 +53,6 @@ namespace Assets.Scenes.GoblinClickerScene
         [SerializeField]
         private PlayerController _playerController;
         [SerializeField]
-        private EnemyController _enemyController;
-        [SerializeField]
         private TextMeshProUGUI _scoreText;
         [SerializeField]
         private TextMeshProUGUI _recordScoreText;

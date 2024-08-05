@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _menuButton: {fileID: 273468437}
   _playerController: {fileID: 905242780}
-  _enemyController: {fileID: 1589129199}
+  _enemyController: {fileID: 0}
   _scoreText: {fileID: 1246190349}
   _recordScoreText: {fileID: 2036589813}
   _autoSavePeriodTimeMs: 500
@@ -725,7 +725,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1589129200}
-  - component: {fileID: 1589129199}
+  - component: {fileID: 1589129202}
   - component: {fileID: 1589129201}
   m_Layer: 0
   m_Name: Enemy
@@ -734,25 +734,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1589129199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1589129198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29c6df297c496e34fa9a66f1ab3f5142, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 1
-  _minX: -4
-  _minY: -4
-  _maxX: 4
-  _maxY: 4
-  _targetPosition: {x: 0, y: 0, z: 0}
-  _isTargetPositionChoosed: 0
 --- !u!4 &1589129200
 Transform:
   m_ObjectHideFlags: 0
@@ -792,6 +773,28 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1589129202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589129198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3308a69e408afe54dadb3808d6103010, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 1
+  _minX: -4
+  _minY: 0
+  _minZ: -4
+  _lockX: 0
+  _lockY: 1
+  _lockZ: 0
+  _maxX: 4
+  _maxY: 0
+  _maxZ: 4
 --- !u!1 &1723576966
 GameObject:
   m_ObjectHideFlags: 0

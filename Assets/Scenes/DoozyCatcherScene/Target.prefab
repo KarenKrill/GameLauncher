@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 819220202383335058}
   - component: {fileID: 3068769413711035131}
   - component: {fileID: 3013349751275507524}
-  - component: {fileID: 4425538724794407665}
+  - component: {fileID: 1125887729173841447}
   m_Layer: 0
   m_Name: Target
   m_TagString: Enemy
@@ -106,7 +106,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4425538724794407665
+--- !u!114 &1125887729173841447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,13 +115,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8233992478342204554}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29c6df297c496e34fa9a66f1ab3f5142, type: 3}
+  m_Script: {fileID: 11500000, guid: 3308a69e408afe54dadb3808d6103010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 1
   _minX: -4
-  _minY: -4
+  _minY: 1
+  _minZ: -4
+  _lockX: 0
+  _lockY: 0
+  _lockZ: 0
   _maxX: 4
   _maxY: 4
-  _targetPosition: {x: 0, y: 0, z: 0}
-  _isTargetPositionChoosed: 0
+  _maxZ: 4
