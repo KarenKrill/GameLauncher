@@ -73,4 +73,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Pp]ackages/*/[Dd]ocumentation.meta
 /[Aa]ssets/[Pp]ackages/*/[Dd]ocumentation/*
 /Debug
-/ServerData/StandaloneWindows64
+/ServerData*
+/Assets/Packages/AddressableAssetsData/link.xml*
+/Assets/Scenes/*/Models/*.png*
+/Assets/Scenes/*/Models/*.mat*
