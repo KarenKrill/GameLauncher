@@ -13,7 +13,7 @@ namespace Assets.Common.Scripts
     {
         #region IRemoteDataProvider
         public bool IsSignInNeeded => true;
-        public bool IsSignedIn => AuthenticationService.Instance?.IsSignedIn ?? false;
+        public bool IsSignedIn => UnityServices.State == ServicesInitializationState.Initialized && AuthenticationService.Instance.IsSignedIn;
         private async Task InitServicesIfUninited()
         {
             if (UnityServices.State == ServicesInitializationState.Uninitialized)
