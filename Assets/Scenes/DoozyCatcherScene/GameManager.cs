@@ -135,10 +135,6 @@ namespace Assets.Scenes.DoozyCatcherScene
                     await remoteDataProvider.SignInAnonymouslyAsync();
                 }
             }
-        }
-        // Start is called before the first frame update
-        async void Start()
-        {
             if (_playerController != null)
             {
                 _playerController.EnemyCaught += OnEnemyCaught;
