@@ -186,7 +186,6 @@ namespace Assets.Scenes.LauncherScene
             {
                 _startLoadProgress ??= progress;
                 progress = Mathf.InverseLerp(_startLoadProgress.Value, _targetLoadProgress, progress);
-                Debug.Log($"LoadProgress: {progress}");
                 _LoadProgress = progress;
             }
         }

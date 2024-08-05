@@ -2,6 +2,7 @@ using UnityEngine;
 
 using Assets.Common.Scripts;
 using Assets.Common.Scripts.Configs;
+using Zenject;
 
 namespace Assets.Scenes.LauncherScene
 {
@@ -13,10 +14,14 @@ namespace Assets.Scenes.LauncherScene
         Transform _gameLoadEntriesContainerTransform;
         [SerializeField]
         GameDatabase _gameDatabase;
-        IContentProvider _gameContentLoader;
-        public void Init(IContentProvider gameContentLoader)
+        IContentProvider _contentProvider;
+        [Inject]
+        public void Init(IContentProvider contentProvider)
         {
-            _gameContentLoader = gameContentLoader;
+            _contentProvider = contentProvider;
+        }
+        public void Awake()
+        {
             foreach (var gameInfo in _gameDatabase.GamesList)
             {
                 if (gameInfo != null)
@@ -24,7 +29,7 @@ namespace Assets.Scenes.LauncherScene
                     var gameLoadEntryObject = Instantiate(_gameLoadEntryPrefab, _gameLoadEntriesContainerTransform);
                     if (gameLoadEntryObject.TryGetComponent<GameLoadEntry>(out var gameLoadEntry))
                     {
-                        gameLoadEntry.Init(_gameContentLoader, gameInfo);
+                        gameLoadEntry.Init(_contentProvider, gameInfo);
                     }
                     else Destroy(gameLoadEntryObject);
                 }

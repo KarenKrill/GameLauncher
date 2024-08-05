@@ -9,11 +9,20 @@ using UnityEngine.SceneManagement;
 
 using TMPro;
 using Assets.Common.Scripts;
+using Zenject;
 
 namespace Assets.Scenes.DoozyCatcherScene
 {
     public class GameManager : MonoBehaviour
     {
+        IDataProvider _dataProvider;
+        [Inject]
+        public void Init(IDataProvider dataProvider)
+        {
+            Debug.Log($"{nameof(GameManager)}.{nameof(Init)}");
+            Debug.Log($"DataProvider: {dataProvider.GetType()}");
+            _dataProvider = dataProvider;
+        }
         [SerializeField]
         private Button _menuButton;
         IEnumerator LoadMenuSceneCoroutine()
@@ -46,7 +55,6 @@ namespace Assets.Scenes.DoozyCatcherScene
         private TextMeshProUGUI _timeText;
         [SerializeField]
         private TextMeshProUGUI _bestTimeText;
-        private Common.Scripts.AppContext _appContext;
         float _time = 0;
         float _Time
         {
@@ -82,10 +90,10 @@ namespace Assets.Scenes.DoozyCatcherScene
         }
         async Task LoadPlayerDataAsync()
         {
-            if (_appContext != null && _appContext.DataProvider != null)
+            if (_dataProvider != null)
             {
                 var metadata = new Dictionary<string, Type>() { { "BestTime", typeof(float) } };
-                var data = await _appContext.DataProvider.LoadAsync(metadata);
+                var data = await _dataProvider.LoadAsync(metadata);
                 if (data != null && data.TryGetValue("BestTime", out var value))
                 {
                     _BestTime = (float)value;
@@ -103,9 +111,9 @@ namespace Assets.Scenes.DoozyCatcherScene
             {
                 { "BestTime", _BestTime }
             };
-            if (_appContext != null && _appContext.DataProvider != null)
+            if (_dataProvider != null)
             {
-                await _appContext.DataProvider.SaveAsync(data);
+                await _dataProvider.SaveAsync(data);
             }
             else
             {
@@ -117,9 +125,16 @@ namespace Assets.Scenes.DoozyCatcherScene
         float _lastAutoSaveEllapsedTimeMs = 0;
         bool _playerSaveDataDirtyFlag = false;
 
-        void Awake()
+        async void Awake()
         {
-            _appContext = FindFirstObjectByType<Common.Scripts.AppContext>();
+            Debug.Log($"{nameof(GameManager)}.{nameof(Awake)}");
+            if (_dataProvider is IRemoteDataProvider remoteDataProvider)
+            {
+                if (remoteDataProvider.IsSignInNeeded && !remoteDataProvider.IsSignedIn)
+                {
+                    await remoteDataProvider.SignInAnonymouslyAsync();
+                }
+            }
         }
         // Start is called before the first frame update
         async void Start()

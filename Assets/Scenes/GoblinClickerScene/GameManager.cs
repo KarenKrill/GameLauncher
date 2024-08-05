@@ -9,11 +9,21 @@ using UnityEngine.SceneManagement;
 
 using TMPro;
 using Assets.Common.Scripts;
+using Zenject;
+using Assets.Scenes.LauncherScene;
 
 namespace Assets.Scenes.GoblinClickerScene
 {
     public class GameManager : MonoBehaviour
     {
+        IDataProvider _dataProvider;
+        [Inject]
+        public void Init(IDataProvider dataProvider)
+        {
+            Debug.Log($"{nameof(GameManager)}.{nameof(Init)}");
+            Debug.Log($"DataProvider: {dataProvider.GetType()}");
+            _dataProvider = dataProvider;
+        }
         [SerializeField]
         private Button _menuButton;
         IEnumerator LoadMenuSceneCoroutine()
@@ -48,7 +58,6 @@ namespace Assets.Scenes.GoblinClickerScene
         private TextMeshProUGUI _scoreText;
         [SerializeField]
         private TextMeshProUGUI _recordScoreText;
-        private Common.Scripts.AppContext _appContext;
 
         int _score = 0;
         int _Score
@@ -89,10 +98,10 @@ namespace Assets.Scenes.GoblinClickerScene
         }
         async Task LoadPlayerDataAsync()
         {
-            if (_appContext != null && _appContext.DataProvider != null)
+            if (_dataProvider != null)
             {
                 var metadata = new Dictionary<string, Type>() { { "RecordScore", typeof(int) } };
-                var data = await _appContext.DataProvider.LoadAsync(metadata);
+                var data = await _dataProvider.LoadAsync(metadata);
                 if (data != null && data.TryGetValue("RecordScore", out var value))
                 {
                     _RecordScore = (int)value;
@@ -110,9 +119,9 @@ namespace Assets.Scenes.GoblinClickerScene
             {
                 { "RecordScore", _RecordScore }
             };
-            if (_appContext != null && _appContext.DataProvider != null)
+            if (_dataProvider != null)
             {
-                await _appContext.DataProvider.SaveAsync(data);
+                await _dataProvider.SaveAsync(data);
             }
             else
             {
@@ -124,13 +133,16 @@ namespace Assets.Scenes.GoblinClickerScene
         float _lastAutoSaveEllapsedTimeMs = 0;
         bool _playerSaveDataDirtyFlag = false;
 
-        void Awake()
+        async void Awake()
         {
-            _appContext = FindFirstObjectByType<Common.Scripts.AppContext>();
-        }
-        // Start is called before the first frame update
-        async void Start()
-        {
+            Debug.Log($"{nameof(GameManager)}.{nameof(Awake)}");
+            if (_dataProvider is IRemoteDataProvider remoteDataProvider)
+            {
+                if (remoteDataProvider.IsSignInNeeded && !remoteDataProvider.IsSignedIn)
+                {
+                    await remoteDataProvider.SignInAnonymouslyAsync();
+                }
+            }
             if (_playerController != null)
             {
                 _playerController.HitEnemyEvent += () => _Score++;
