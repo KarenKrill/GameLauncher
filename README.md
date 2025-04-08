@@ -4,4 +4,8 @@
 
 ## Gameplay
 
-![Gameplay](Gameplay.gif)
+### GoblinClicker
+![GoblinClicker](GoblinClickerGameplay.gif)
+
+### DoozyCatcher
+![DoozyCatcher](DoozyCatcherGameplay.gif)
