@@ -77,3 +77,5 @@ crashlytics-build.properties
 /Assets/Packages/AddressableAssetsData/link.xml*
 /Assets/Scenes/*/Models/*.png*
 /Assets/Scenes/*/Models/*.mat*
+/Assets/Common/Scripts/Utils/*.bat
+/Assets/Common/Scripts/Utils/UpdateGameLauncherServerData.Dev.bat
