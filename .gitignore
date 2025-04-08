@@ -78,3 +78,7 @@ crashlytics-build.properties
 /Assets/Scenes/*/Models/*.png*
 /Assets/Scenes/*/Models/*.mat*
 /Assets/Common/Scripts/Utils/*.bat
+/GameLauncher.sln
+/Assembly-CSharp.csproj
+/Zenject.csproj
+/Zenject-Editor.csproj
